@@ -1,21 +1,9 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
-//use std::num;
-
-// fn number_iterations(&element: &i32, second_column: &Vec<i32>) -> i32 {
-//     let count = second_column.into_iter()
-//                             .filter(|x| **x == element)
-//                             .count();
-//     // if count > 0 {
-//     //     println!("The count is {} and the element is {}", count, element);
-//     // }
-//     println!("The count is {} and the element is {}", count, element);
-//     count.try_into().unwrap()
-// }
+use std::cmp::Reverse;
 
 fn main() {
-    // let mut line_vectors: Vec<i32> = vec![];
     let mut line_vectors: Vec<Vec<i32>> = Vec::new();
     let mut total_unsafe: u32 = 0;
 
@@ -30,11 +18,12 @@ fn main() {
     }
 
     for lv in line_vectors.iter() {
-        // println!("{:?}", lv);
-
-        if !(lv.iter().is_sorted() || lv.iter().is_sorted_by(|a, b| b > a)) {
+        if !(lv.iter().is_sorted() || lv.iter().is_sorted_by_key(|w| Reverse(*w))) {
+            // println!("Unsorted {:?}", lv);
             total_unsafe += 1;
             continue
+        } else {
+            println!("Sorted {:?}", lv);
         }
 
         let mut last = 0;
@@ -42,7 +31,7 @@ fn main() {
             if index == 0 {
                 last = *cv;
                 continue
-            } else if (last - cv).abs() > 3 {
+            } else if ((last - cv).abs() > 3 || (last - cv) == 0 ){
                 total_unsafe += 1;
                 break
             }
